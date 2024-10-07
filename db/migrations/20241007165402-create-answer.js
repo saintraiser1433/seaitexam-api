@@ -1,0 +1,61 @@
+"use strict";
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("answer_tbl", {
+      answer_id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      examinee_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "examinee_tbl",
+          key: "examinee_id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+      exam_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "exam_tbl",
+          key: "exam_id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+      question_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "question_tbl",
+          key: "question_id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+      choices_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "choices_tbl",
+          key: "choices_id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+    });
+  },
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("answer_tbl");
+  },
+};
