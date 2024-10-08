@@ -9,14 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
       examinee_id: {
         type: Sequelize.INTEGER,
         references: {
@@ -52,6 +44,14 @@ module.exports = {
         },
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
       },
     });
   },

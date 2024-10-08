@@ -5,8 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./app.js",
-    "undo": "npx sequelize-cli db:migrate:undo",
-    "migrate": "npx sequelize-cli db:migrate"
+    "down": "npx sequelize-cli db:migrate:undo",
+    "up": "npx sequelize-cli db:migrate",
+    "db": "npx sequelize-cli db:create"
   },
   "keywords": [],
   "author": "",

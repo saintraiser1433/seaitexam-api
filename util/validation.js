@@ -36,14 +36,14 @@ const examineeValidation = {
 };
 
 const courseValidation = {
-  checkValidate: (data) => {
+  checkCourse: (data) => {
     const schema = Joi.object({
       description: Joi.string().required().messages({
         "string.empty": `Description cannot be empty`,
         "any.required": `Description cannot be null or empty`,
       }),
       score: Joi.number().min(1).required().messages({
-        "string.base": `Score should be a type of 'integer'`,
+        "string.base": `Score should be a type of 'number'`,
         "string.empty": `Score cannot be empty`,
         "any.required": `Score cannot be null or empty`,
       }),
@@ -52,7 +52,26 @@ const courseValidation = {
   },
 };
 
+const questionValidation = {
+  checkValidate: (data) => {
+    const schema = Joi.object({
+      question: Joi.string().required().messages({
+        "string.empty": `Question cannot be empty`,
+        "any.required": `Question cannot be null or empty`,
+      }),
+      exam_id: Joi.number().required().messages({
+        "string.empty": `Exam cannot be empty`,
+        "any.required": `Exam cannot be null or empty`,
+      }),
+    });
+    return schema.validate(data, {
+      abortEarly: false,
+    });
+  },
+};
+
 module.exports = {
   examineeValidation,
   courseValidation,
+  questionValidation,
 };

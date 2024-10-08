@@ -8,14 +8,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Exam.belongsToMany(models.Answer, { through: "answer_tbl" });
+      Exam.hasMany(models.Answer, {
+        foreignKey: {
+          name: "exam_id",
+          allowNull: false,
+        },
+      });
       Exam.hasMany(models.Question, {
         foreignKey: {
           name: "exam_id",
           allowNull: false,
         },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
       });
     }
   }

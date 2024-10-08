@@ -40,9 +40,11 @@ const getCourseById = async (req, res) => {
 
 const insertCourse = async (req, res) => {
   try {
-    const { error, value } = courseValidation.checkValidate(req.body);
+    const { error, value } = courseValidation.checkCourse(req.body);
     if (error) {
-      throw new Error(error.details[0].message);
+      return res.status(404).json({
+        message: error.details[0].message,
+      });
     }
     const [examinee, created] = await models.Course.findOrCreate({
       where: {
@@ -71,7 +73,7 @@ const insertCourse = async (req, res) => {
 const updateCourse = async (req, res) => {
   const id = req.params.id;
   try {
-    const { error, value } = courseValidation.checkValidate(req.body);
+    const { error, value } = courseValidation.checkCourse(req.body);
 
     if (error) {
       return res.status(400).json({

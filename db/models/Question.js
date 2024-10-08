@@ -8,8 +8,18 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Question.belongsToMany(models.Answer, { through: "answer_tbl" });
-      Question.belongsTo(models.Exam);
+      Question.hasMany(models.Answer, {
+        foreignKey: {
+          name: "question_id",
+          allowNull: false,
+        },
+      });
+      Question.belongsTo(models.Exam, {
+        foreignKey: {
+          name: "exam_id",
+          allowNull: false,
+        },
+      });
       Question.hasMany(models.Choices, {
         foreignKey: {
           name: "question_id",
@@ -26,6 +36,16 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
+      },
+      exam_id: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "exam_tbl",
+          key: "exam_id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        allowNull: false,
       },
       question: {
         type: DataTypes.STRING,

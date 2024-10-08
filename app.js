@@ -3,12 +3,14 @@ const express = require("express");
 const { sequelize } = require("./db/models");
 const examineeRoute = require("./routes/examineeRoute");
 const courseRoute = require("./routes/courseRoute");
+const questionRoute = require("./routes/questionRoute");
 const app = express();
 const port = process.env.APP_PORT;
 app.use(express.json());
 
 app.use("/api/v1/examinee", examineeRoute);
 app.use("/api/v1/course", courseRoute);
+app.use("/api/v1/question", questionRoute);
 
 app.use("*", (req, res) => {
   return res.status(404).json({
@@ -17,7 +19,7 @@ app.use("*", (req, res) => {
 });
 
 sequelize
-  .sync()
+  .sync({ force: true })
   .then(() => {
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);

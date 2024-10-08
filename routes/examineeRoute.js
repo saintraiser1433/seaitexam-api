@@ -1,11 +1,17 @@
 const { Router } = require("express");
-const examinee = require("../controllers/examineeController");
+const {
+  getAllExaminee,
+  getExamineeById,
+  insertExaminee,
+  updateExaminee,
+  deleteExaminee,
+} = require("../controllers/examineeController");
 const route = Router();
 
-route.get("/", examinee.getAllExaminee);
-route.get("/:id", examinee.getExamineeById);
-route.post("/", examinee.insertExaminee);
-route.put("/:id", examinee.updateExaminee);
-route.delete("/:id", examinee.deleteExaminee);
+route.get("/", getAllExaminee);
+route.get("/:id", getExamineeById);
+route.post("/", insertExaminee);
+route.put("/:id", updateExaminee);
+route.delete("/:id", deleteExaminee);
 
 module.exports = route;
