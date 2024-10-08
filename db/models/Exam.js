@@ -29,20 +29,16 @@ module.exports = (sequelize, DataTypes) => {
       },
       exam_title: {
         type: DataTypes.STRING,
-        allowNull: false,
         unique: true,
       },
       description: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
       time_limit: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
       question_limit: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
       status: DataTypes.BOOLEAN,
     },
