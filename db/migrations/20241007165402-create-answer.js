@@ -15,8 +15,6 @@ module.exports = {
           model: "examinee_tbl",
           key: "examinee_id",
         },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
       },
       exam_id: {
         type: Sequelize.INTEGER,
@@ -42,8 +40,6 @@ module.exports = {
           model: "choices_tbl",
           key: "choices_id",
         },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
       },
       createdAt: {
         allowNull: false,

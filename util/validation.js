@@ -64,9 +64,56 @@ const questionValidation = {
         "any.required": `Exam cannot be null or empty`,
       }),
     });
-    return schema.validate(data, {
-      abortEarly: false,
+    return schema.validate(data);
+  },
+};
+
+const examValidation = {
+  insert: (data) => {
+    const schema = Joi.object({
+      exam_title: Joi.string().required().messages({
+        "string.empty": `Question cannot be empty`,
+        "any.required": `Question cannot be null or empty`,
+      }),
+      description: Joi.number().required().messages({
+        "string.empty": `Exam Title cannot be empty`,
+        "any.required": `Exam Title cannot be null or empty`,
+      }),
+      time_limit: Joi.number().required().messages({
+        "string.empty": `Time Limit cannot be empty`,
+        "any.required": `Time Limit cannot be null or empty`,
+      }),
+      question_limit: Joi.number().required().messages({
+        "string.empty": `Question Limit cannot be empty`,
+        "any.required": `Question Limit cannot be null or empty`,
+      }),
     });
+    return schema.validate(data);
+  },
+  update: (data) => {
+    const schema = Joi.object({
+      exam_title: Joi.string().min(1).empty().optional().messages({
+        "string.min": `Exam Title should have a minimum length of {#limit}`,
+        "string.empty": `Exam Title cannot be empty`,
+        "any.required": `Exam Title cannot be null or empty`,
+      }),
+      description: Joi.string().min(1).empty().optional().messages({
+        "string.min": `Exam description should have a minimum length of {#limit}`,
+        "string.empty": `Exam description cannot be empty`,
+        "any.required": `Exam description  cannot be null or empty`,
+      }),
+      time_limit: Joi.number().min(1).empty().optional().messages({
+        "number.min": `Time limit should have a minimum length of {#limit}`,
+        "string.empty": `Time Limit cannot be empty`,
+        "any.required": `Time Limit cannot be null or empty`,
+      }),
+      question_limit: Joi.number().min(1).empty().optional().messages({
+        "number.min": `Question Limit should have a minimum length of {#limit}`,
+        "string.empty": `Question Limit cannot be empty`,
+        "any.required": `Question Limit cannot be null or empty`,
+      }),
+    });
+    return schema.validate(data);
   },
 };
 
@@ -74,4 +121,5 @@ module.exports = {
   examineeValidation,
   courseValidation,
   questionValidation,
+  examValidation,
 };

@@ -38,12 +38,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       time_limit: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
       },
       question_limit: {
         type: DataTypes.INTEGER,
       },
-      status: DataTypes.BOOLEAN,
+      status: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
     },
     {
       sequelize,

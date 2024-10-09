@@ -41,7 +41,6 @@ const getAllQuestionById = async (req, res) => {
 
 const insertQuestion = async (req, res) => {
   try {
-    console.log(req.body);
     const data = await questionUseCase.insert(req.body);
     const result = await model.Question.create(data);
     res.status(201).json({ data: result });
@@ -78,7 +77,9 @@ const deleteQuestion = async (req, res) => {
       },
     });
     if (deleteRowCount === 0) {
-      return res.status(404).json({ message: "Question not found" });
+      return res
+        .status(404)
+        .json({ message: "Question not found, no deletion has been made" });
     }
     res.status(200).json({ message: "Question deleted successfully" });
   } catch (error) {
