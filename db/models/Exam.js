@@ -32,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       exam_title: {
         type: DataTypes.STRING,
-        unique: true,
       },
       description: {
         type: DataTypes.STRING,

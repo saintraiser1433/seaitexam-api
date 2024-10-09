@@ -7,23 +7,23 @@ const questionUseCase = {
     if (error) {
       throw new Error(error.details[0].message);
     }
-    const exam = await model.Question.findByPk(data.exam_id);
+    const exam = await model.Exam.findByPk(parseInt(value.exam_id));
     if (!exam) {
       throw new Error("Exam not found");
     }
     return value;
   },
 
-  update: async (data) => {
+  update: async (data, id) => {
     const { error, value } = questionValidation.checkValidate(data);
     if (error) {
       throw new Error(error.details[0].message);
     }
-    const exam = await model.Question.findByPk(data.exam_id);
+    const exam = await model.Exam.findByPk(data.exam_id);
     if (!exam) {
       throw new Error("Exam not found");
     }
-    const question = await model.Question.findByPk(data.question_id);
+    const question = await model.Question.findByPk(id);
     if (!question) {
       throw new Error("Question not found");
     }

@@ -40,7 +40,7 @@ const getCourseById = async (req, res) => {
 
 const insertCourse = async (req, res) => {
   try {
-    const { error, value } = courseValidation.checkCourse(req.body);
+    const { error, value } = courseValidation.insert(req.body);
     if (error) {
       return res.status(404).json({
         message: error.details[0].message,
@@ -73,7 +73,7 @@ const insertCourse = async (req, res) => {
 const updateCourse = async (req, res) => {
   const id = req.params.id;
   try {
-    const { error, value } = courseValidation.checkCourse(req.body);
+    const { error, value } = courseValidation.update(req.body);
 
     if (error) {
       return res.status(400).json({

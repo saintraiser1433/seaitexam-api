@@ -30,19 +30,35 @@ const examineeValidation = {
       first_name: Joi.string().min(3).max(30).empty().optional(),
       last_name: Joi.string().min(3).max(30).empty().optional(),
       middle_name: Joi.string().min(3).max(30).empty().optional(),
+      username: Joi.string().min(3).max(30).empty().optional(),
+      password: Joi.string().min(3).max(30).empty().optional(),
     });
     return schema.validate(data);
   },
 };
 
 const courseValidation = {
-  checkCourse: (data) => {
+  insert: (data) => {
     const schema = Joi.object({
       description: Joi.string().required().messages({
         "string.empty": `Description cannot be empty`,
         "any.required": `Description cannot be null or empty`,
       }),
       score: Joi.number().min(1).required().messages({
+        "string.base": `Score should be a type of 'number'`,
+        "string.empty": `Score cannot be empty`,
+        "any.required": `Score cannot be null or empty`,
+      }),
+    });
+    return schema.validate(data);
+  },
+  update: (data) => {
+    const schema = Joi.object({
+      description: Joi.string().empty().optional().messages({
+        "string.empty": `Description cannot be empty`,
+        "any.required": `Description cannot be null or empty`,
+      }),
+      score: Joi.number().min(1).optional().messages({
         "string.base": `Score should be a type of 'number'`,
         "string.empty": `Score cannot be empty`,
         "any.required": `Score cannot be null or empty`,
@@ -75,7 +91,7 @@ const examValidation = {
         "string.empty": `Question cannot be empty`,
         "any.required": `Question cannot be null or empty`,
       }),
-      description: Joi.number().required().messages({
+      description: Joi.string().required().messages({
         "string.empty": `Exam Title cannot be empty`,
         "any.required": `Exam Title cannot be null or empty`,
       }),

@@ -50,11 +50,12 @@ const insertQuestion = async (req, res) => {
 };
 
 const updateQuestion = async (req, res) => {
+  const id = req.params.id;
   try {
-    const data = await questionUseCase.update(req.body);
+    const data = await questionUseCase.update(req.body, id);
     const [updatedRowsCount] = await model.Question.update(data, {
       where: {
-        question_id: req.params.id,
+        question_id: id,
       },
     });
     if (updatedRowsCount === 0) {

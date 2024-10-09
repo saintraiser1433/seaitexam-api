@@ -44,18 +44,18 @@ const insertExaminee = async (req, res) => {
   try {
     const { error, value } = examineeValidation.insert(req.body);
     if (error) {
-      throw new Error(error.details[0].message);
+      return res.status(404).json({
+        message: error.details[0].message,
+      });
     }
     const { first_name, last_name, middle_name, username, password } = value;
     const hash = await hashPassword(password);
 
     const [examinee, created] = await models.Examinee.findOrCreate({
       where: {
-        [Op.and]: {
-          first_name: first_name,
-          last_name: last_name,
-          middle_name: middle_name,
-        },
+        first_name: first_name,
+        last_name: last_name,
+        middle_name: middle_name,
       },
       defaults: {
         username,

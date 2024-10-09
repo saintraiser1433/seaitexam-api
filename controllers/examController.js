@@ -3,7 +3,7 @@ const { examValidation } = require("../util/validation");
 const getExamAll = async (req, res) => {
   try {
     const result = await model.Exam.findAll();
-    if (!result) {
+    if (result.length === 0) {
       return res.status(404).json({
         message: "No exam found",
       });
@@ -45,6 +45,7 @@ const insertExam = async (req, res) => {
         message: error.details[0].message,
       });
     }
+
     const [data, created] = await model.Exam.findOrCreate({
       where: {
         exam_title: value.exam_title,
@@ -86,7 +87,7 @@ const updateExam = async (req, res) => {
 
     if (updatedRowsCount === 0) {
       return res.status(404).json({
-        message: "Exam not found or no changes made",
+        message: "Exam not found no changes made",
       });
     }
     return res.status(200).json({
