@@ -133,9 +133,48 @@ const examValidation = {
   },
 };
 
+const choicesValidation = {
+  choiceValidate: (data) => {
+    const schema = Joi.object({
+      description: Joi.string().required().messages({
+        "string.empty": `Exam cannot be empty`,
+        "any.required": `Exam cannot be null or empty`,
+      }),
+      question_id: Joi.number().required().messages({
+        "string.empty": `Question cannot be empty`,
+        "any.required": `Question cannot be null or empty`,
+      }),
+      status: Joi.boolean().optional(),
+    });
+    return schema.validate(data);
+  },
+};
+
+const answerValidation = {
+  validate: (data) => {
+    const schema = Joi.object({
+      examinee_id: Joi.number().required().messages({
+        "any.required": `Examinee is null or empty`,
+      }),
+      choices_id: Joi.number().required().messages({
+        "any.required": `Choices is null or empty`,
+      }),
+      exam_id: Joi.number().required().messages({
+        "any.required": `Exam is null or empty`,
+      }),
+      question_id: Joi.number().required().messages({
+        "any.required": `Question is null or empty`,
+      }),
+    });
+    return schema.validate(data);
+  },
+};
+
 module.exports = {
   examineeValidation,
   courseValidation,
   questionValidation,
   examValidation,
+  choicesValidation,
+  answerValidation,
 };

@@ -6,7 +6,7 @@ const getAllCourse = async (req, res) => {
     const result = await models.Course.findAll();
     if (result.length === 0) {
       return res.status(404).json({
-        message: "No result found",
+        error: "No result found",
       });
     }
     res.status(200).json({
@@ -14,7 +14,7 @@ const getAllCourse = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -25,7 +25,7 @@ const getCourseById = async (req, res) => {
     const result = await models.Course.findByPk(id);
     if (!result) {
       return res.status(404).json({
-        message: "Course not found",
+        error: "Course not found",
       });
     }
     res.status(200).json({
@@ -33,7 +33,7 @@ const getCourseById = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -61,11 +61,11 @@ const insertCourse = async (req, res) => {
       });
     }
     res.status(409).json({
-      message: "Course already exists",
+      error: "Course already exists",
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -77,7 +77,7 @@ const updateCourse = async (req, res) => {
 
     if (error) {
       return res.status(400).json({
-        message: error.details[0].message,
+        error: error.details[0].message,
       });
     }
 
@@ -86,7 +86,7 @@ const updateCourse = async (req, res) => {
     });
     if (updatedRowsCount === 0) {
       return res.status(404).json({
-        message: "Course not found or no changes made",
+        error: "Course not found or no changes made",
       });
     }
     return res.status(200).json({
@@ -94,7 +94,7 @@ const updateCourse = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -109,7 +109,7 @@ const deleteCourse = async (req, res) => {
     });
     if (deleteRowCount === 0) {
       return res.status(404).json({
-        message: "Course not found or no changes made",
+        error: "Course not found or no changes made",
       });
     }
     res.status(200).json({
@@ -117,7 +117,7 @@ const deleteCourse = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };

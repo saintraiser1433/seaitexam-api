@@ -19,6 +19,14 @@ module.exports = (sequelize, DataTypes) => {
           name: "exam_id",
           allowNull: false,
         },
+        onDelete: "CASCADE",
+      });
+      Exam.hasOne(models.ExamAttempt, {
+        foreignKey: {
+          name: "exam_id",
+          allowNull: false,
+        },
+        onDelete: "CASCADE",
       });
     }
   }

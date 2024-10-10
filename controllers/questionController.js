@@ -43,7 +43,10 @@ const insertQuestion = async (req, res) => {
   try {
     const data = await questionUseCase.insert(req.body);
     const result = await model.Question.create(data);
-    res.status(201).json({ data: result });
+    return res.status(201).json({
+      message: "Insert question successfully",
+      data: result,
+    });
   } catch (e) {
     return res.status(500).json({ message: e.message });
   }
@@ -53,16 +56,11 @@ const updateQuestion = async (req, res) => {
   const id = req.params.id;
   try {
     const data = await questionUseCase.update(req.body, id);
-    const [updatedRowsCount] = await model.Question.update(data, {
+    await model.Question.update(data, {
       where: {
         question_id: id,
       },
     });
-    if (updatedRowsCount === 0) {
-      return res.status(404).json({
-        message: "Question not found or no changes made",
-      });
-    }
     res.status(200).json({ message: "Question updated successfully" });
   } catch (e) {
     return res.status(500).json({ message: e.message });
