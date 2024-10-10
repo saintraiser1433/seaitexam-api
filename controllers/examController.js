@@ -2,7 +2,9 @@ const model = require("../db/models");
 const { examValidation } = require("../util/validation");
 const getExamAll = async (req, res) => {
   try {
-    const result = await model.Exam.findAll();
+    const result = await model.Exam.findAll({
+      order: [["exam_id", "asc"]],
+    });
     if (result.length === 0) {
       return res.status(404).json({
         message: "No exam found",

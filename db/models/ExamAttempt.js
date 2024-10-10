@@ -24,7 +24,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ExamAttempt.init(
-    {},
+    {
+      attempt_id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
+    },
     {
       sequelize,
       modelName: "ExamAttempt",

@@ -1,5 +1,5 @@
 const model = require("../db/models");
-const { answerUseCase } = require("../use-cases/answer-use-case");
+const answerUseCase = require("../use-cases/answer-use-case");
 
 const insertAnswer = async (req, res) => {
   try {
