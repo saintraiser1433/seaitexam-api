@@ -7,12 +7,10 @@ const getExamAll = async (req, res) => {
     });
     if (result.length === 0) {
       return res.status(404).json({
-        message: "No exam found",
+        error: "No exam found",
       });
     }
-    res.status(200).json({
-      data: result,
-    });
+    return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -29,12 +27,10 @@ const getExamAllById = async (req, res) => {
         message: "No exam found",
       });
     }
-    res.status(200).json({
-      data: result,
-    });
+    res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -61,7 +57,7 @@ const insertExam = async (req, res) => {
     if (created) {
       return res.status(201).json({
         message: "Successfully inserted exam",
-        data: data,
+        data,
       });
     }
     res.status(409).json({
@@ -69,7 +65,7 @@ const insertExam = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -97,7 +93,7 @@ const updateExam = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -120,7 +116,7 @@ const deleteExam = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };

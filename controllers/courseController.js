@@ -9,9 +9,7 @@ const getAllCourse = async (req, res) => {
         error: "No result found",
       });
     }
-    res.status(200).json({
-      data: result,
-    });
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -28,9 +26,7 @@ const getCourseById = async (req, res) => {
         error: "Course not found",
       });
     }
-    res.status(200).json({
-      data: result,
-    });
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -42,7 +38,7 @@ const insertCourse = async (req, res) => {
   try {
     const { error, value } = courseValidation.insert(req.body);
     if (error) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: error.details[0].message,
       });
     }

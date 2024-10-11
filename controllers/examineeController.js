@@ -1,7 +1,6 @@
 const models = require("../db/models");
 const { examineeValidation } = require("../util/validation");
 const { hashPassword } = require("../util/hash");
-const { Op } = require("sequelize");
 
 const getAllExaminee = async (req, res) => {
   try {
@@ -11,12 +10,10 @@ const getAllExaminee = async (req, res) => {
         message: "No result found",
       });
     }
-    res.status(200).json({
-      data: result,
-    });
+    res.status(200).send(result);
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -35,7 +32,7 @@ const getExamineeById = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -44,7 +41,7 @@ const insertExaminee = async (req, res) => {
   try {
     const { error, value } = examineeValidation.insert(req.body);
     if (error) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: error.details[0].message,
       });
     }
@@ -53,9 +50,9 @@ const insertExaminee = async (req, res) => {
 
     const [examinee, created] = await models.Examinee.findOrCreate({
       where: {
-        first_name: first_name,
-        last_name: last_name,
-        middle_name: middle_name,
+        first_name,
+        last_name,
+        middle_name,
       },
       defaults: {
         username,
@@ -65,7 +62,7 @@ const insertExaminee = async (req, res) => {
 
     if (created) {
       return res.status(201).json({
-        message: "Successfully registered",
+        message: "Successfully added examinee",
         data: examinee,
       });
     }
@@ -74,7 +71,7 @@ const insertExaminee = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -104,7 +101,7 @@ const updateExaminee = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -128,7 +125,7 @@ const deleteExaminee = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
