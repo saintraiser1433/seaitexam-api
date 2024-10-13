@@ -2,7 +2,7 @@ const { Router } = require("express");
 const {
   getAllQuestions,
   getAllQuestionById,
-  insertQuestion,
+  insertQuestionChoices,
   updateQuestion,
   deleteQuestion,
 } = require("../controllers/questionController");
@@ -10,7 +10,7 @@ const route = Router();
 
 route.get("/", getAllQuestions);
 route.get("/:id", getAllQuestionById);
-route.post("/", insertQuestion);
+route.post("/", insertQuestionChoices);
 route.put("/:id", updateQuestion);
 route.delete("/:id", deleteQuestion);
 

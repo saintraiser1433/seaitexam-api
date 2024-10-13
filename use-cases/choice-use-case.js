@@ -4,10 +4,7 @@ const model = require("../db/models");
 const choiceUseCase = {
   insert: async (data) => {
     const { error, value } = choicesValidation.choiceValidate(data);
-    const { question_id } = value;
     if (error) throw new Error(error.details[0].message);
-    const hasQuestion = await model.Question.findByPk(parseInt(question_id));
-    if (!hasQuestion) throw new Error("Question not found");
     return value;
   },
 

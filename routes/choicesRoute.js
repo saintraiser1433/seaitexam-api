@@ -6,14 +6,15 @@ const {
   updateChoice,
   deleteChoice,
   getChoicesByQuestionId,
+  getChoicesByExamId,
 } = require("../controllers/choiceController");
 const route = Router();
 
-route.get("/quest/:id", getChoicesByQuestionId);
+route.get("/quest/:questionId", getChoicesByQuestionId);
+route.get("/exam/:examId", getChoicesByExamId);
 route.get("/", getAllChoices);
-route.get("/:id", getAllChoicesById);
-route.post("/", insertChoices);
-route.put("/:id", updateChoice);
-route.delete("/:id", deleteChoice);
+route.get("/:choicesId", getAllChoicesById);
+route.put("/:choicesId", updateChoice);
+route.delete("/:choicesId", deleteChoice);
 
 module.exports = route;

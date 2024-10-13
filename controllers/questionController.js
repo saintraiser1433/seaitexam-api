@@ -1,11 +1,12 @@
-const model = require("../db/models");
+const { sequelize, Question, Choices, Exam } = require("../db/models");
 const questionUseCase = require("../use-cases/question-use-case");
+const choiceUseCase = require("../use-cases/choice-use-case");
 const getAllQuestions = async (req, res) => {
   try {
-    const result = await model.Question.findAll({
+    const result = await Question.findAll({
       include: [
         {
-          model: model.Exam,
+          model: Exam,
           attributes: ["exam_title"],
         },
       ],
@@ -22,10 +23,10 @@ const getAllQuestions = async (req, res) => {
 const getAllQuestionById = async (req, res) => {
   const id = req.params.id;
   try {
-    const result = await model.Question.findByPk(id, {
+    const result = await Question.findByPk(id, {
       include: [
         {
-          model: model.Exam,
+          model: Exam,
           attributes: ["exam_title"],
         },
       ],
@@ -39,13 +40,39 @@ const getAllQuestionById = async (req, res) => {
   }
 };
 
-const insertQuestion = async (req, res) => {
+const insertQuestionChoices = async (req, res) => {
   try {
-    const data = await questionUseCase.insert(req.body);
-    const result = await model.Question.create(data);
-    return res.status(201).json({
-      message: "Insert question successfully",
-      data: result,
+    await sequelize.transaction(async (t) => {
+      const { question, exam_id, choices } = req.body;
+      const questBody = {
+        question: question,
+        exam_id: exam_id,
+      };
+
+      const questData = await questionUseCase.insert(questBody);
+
+      const questionRecord = await Question.create(questData, {
+        transaction: t,
+      });
+      const choiceData = choices.map((choice) => ({
+        description: choice.description,
+        question_id: questionRecord.question_id,
+        status: choice.status,
+      }));
+
+      const validatedChoices = await choiceUseCase.insert(choiceData);
+
+      const choiceRecord = await Choices.bulkCreate(validatedChoices, {
+        transaction: t,
+      });
+      return res.status(201).json({
+        status: "Success",
+        message: "Succesfully inserted",
+        data: {
+          question: questionRecord,
+          choices: choiceRecord,
+        },
+      });
     });
   } catch (e) {
     return res.status(500).json({ message: e.message });
@@ -56,7 +83,7 @@ const updateQuestion = async (req, res) => {
   const id = req.params.id;
   try {
     const data = await questionUseCase.update(req.body, id);
-    await model.Question.update(data, {
+    await Question.update(data, {
       where: {
         question_id: id,
       },
@@ -70,7 +97,7 @@ const updateQuestion = async (req, res) => {
 const deleteQuestion = async (req, res) => {
   const id = req.params.id;
   try {
-    const deleteRowCount = await model.Question.destroy({
+    const deleteRowCount = await Question.destroy({
       where: {
         question_id: id,
       },
@@ -89,7 +116,7 @@ const deleteQuestion = async (req, res) => {
 module.exports = {
   getAllQuestions,
   getAllQuestionById,
-  insertQuestion,
+  insertQuestionChoices,
   updateQuestion,
   deleteQuestion,
 };
