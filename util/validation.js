@@ -69,7 +69,7 @@ const courseValidation = {
 };
 
 const questionValidation = {
-  checkValidate: (data) => {
+  insert: (data) => {
     const schema = Joi.object({
       question: Joi.string().required().messages({
         "string.empty": `Question cannot be empty`,
@@ -79,6 +79,16 @@ const questionValidation = {
         "number.empty": `Exam cannot be empty`,
         "number.required": `Exam cannot be null or empty`,
       }),
+    });
+    return schema.validate(data);
+  },
+  update: (data) => {
+    const schema = Joi.object({
+      question: Joi.string().required().messages({
+        "string.empty": `Question cannot be empty`,
+        "any.required": `Question cannot be null or empty`,
+      }),
+      question_id: Joi.number().optional(),
     });
     return schema.validate(data);
   },
@@ -134,7 +144,7 @@ const examValidation = {
 };
 
 const choicesValidation = {
-  choiceValidate: (data) => {
+  insert: (data) => {
     const schema = Joi.array().items({
       description: Joi.string().required().messages({
         "string.empty": `Choice cannot be empty`,
@@ -144,6 +154,17 @@ const choicesValidation = {
         "number.empty": `Question cannot be empty`,
         "any.required": `Question cannot be null or empty`,
       }),
+      status: Joi.boolean().optional(),
+    });
+    return schema.validate(data);
+  },
+  update: (data) => {
+    const schema = Joi.object({
+      description: Joi.string().required().messages({
+        "string.empty": `Choice cannot be empty`,
+        "any.required": `Choice cannot be null or empty`,
+      }),
+      choices_id: Joi.number().optional(),
       status: Joi.boolean().optional(),
     });
     return schema.validate(data);

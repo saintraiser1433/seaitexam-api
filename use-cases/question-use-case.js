@@ -3,7 +3,7 @@ const model = require("../db/models");
 
 const questionUseCase = {
   insert: async (data) => {
-    const { error, value } = questionValidation.checkValidate(data);
+    const { error, value } = questionValidation.insert(data);
     const { exam_id } = value;
     if (error) throw new Error(error.details[0].message);
 
@@ -13,14 +13,11 @@ const questionUseCase = {
     return value;
   },
 
-  update: async (data, id) => {
-    const { error, value } = questionValidation.checkValidate(data);
+  update: async (data) => {
+    const { error, value } = questionValidation.update(data);
     if (error) throw new Error(error.details[0].message);
 
-    const exam = await model.Exam.findByPk(data.exam_id);
-    if (!exam) throw new Error("Exam not found");
-
-    const question = await model.Question.findByPk(id);
+    const question = await model.Question.findByPk(value.question_id);
     if (!question) throw new Error("Question not found");
     return value;
   },

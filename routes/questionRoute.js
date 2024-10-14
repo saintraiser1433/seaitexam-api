@@ -3,7 +3,7 @@ const {
   getAllQuestions,
   getAllQuestionById,
   insertQuestionChoices,
-  updateQuestion,
+  updateQuestionChoices,
   deleteQuestion,
 } = require("../controllers/questionController");
 const route = Router();
@@ -11,7 +11,7 @@ const route = Router();
 route.get("/", getAllQuestions);
 route.get("/:id", getAllQuestionById);
 route.post("/", insertQuestionChoices);
-route.put("/:id", updateQuestion);
+route.put("/:id", updateQuestionChoices);
 route.delete("/:id", deleteQuestion);
 
 module.exports = route;

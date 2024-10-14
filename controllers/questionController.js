@@ -61,21 +61,28 @@ const insertQuestionChoices = async (req, res) => {
       }));
 
       const validatedChoices = await choiceUseCase.insert(choiceData);
-      const createdChoices = await Choices.bulkCreate(validatedChoices, {
+
+      await Choices.bulkCreate(validatedChoices, {
         transaction: t,
       });
 
-      const result = {
-        question_id: questionRecord.question_id,
-        question: questionRecord.question,
-        exam_id: questionRecord.exam_id,
-        choices: createdChoices,
-      };
+      const insertedQuestion = await Question.findByPk(
+        questionRecord.question_id,
+        {
+          transaction: t,
+        }
+      );
+      // const result = {
+      //   question_id: questionRecord.question_id,
+      //   question: questionRecord.question,
+      //   exam_id: questionRecord.exam_id,
+      //   choices: createdChoices,
+      // };
 
       return res.status(201).json({
         status: "Success",
         message: "Succesfully inserted",
-        data: result,
+        data: insertedQuestion,
       });
     });
   } catch (e) {
@@ -83,16 +90,74 @@ const insertQuestionChoices = async (req, res) => {
   }
 };
 
-const updateQuestion = async (req, res) => {
-  const id = req.params.id;
+const updateQuestionChoices = async (req, res) => {
   try {
-    const data = await questionUseCase.update(req.body, id);
-    await Question.update(data, {
-      where: {
-        question_id: id,
-      },
+    await sequelize.transaction(async (t) => {
+      const { question, question_id, choices } = req.body;
+
+      // Update the question
+      const quest = {
+        question: question,
+        question_id: question_id,
+      };
+      const questData = await questionUseCase.update(quest);
+
+      await Question.update(questData, {
+        where: { question_id: question_id },
+        transaction: t,
+      });
+
+      // Find all existing choices for the question
+      const existingChoices = await Choices.findAll({
+        where: { question_id: question_id },
+        transaction: t,
+      });
+
+      // Get the ids of incoming choices from the request body
+      const incomingChoiceIds = choices.map((choice) => choice.choices_id);
+
+      // Delete the choices that do not exist in the incoming choices
+      const choicesToDelete = existingChoices.filter(
+        (existingChoice) =>
+          !incomingChoiceIds.includes(existingChoice.choices_id)
+      );
+
+      for (const choiceToDelete of choicesToDelete) {
+        await Choices.destroy({
+          where: { choices_id: choiceToDelete.choices_id },
+          transaction: t,
+        });
+      }
+
+      for (const choice of choices) {
+        const validatedChoice = await choiceUseCase.update(choice);
+
+        const existingChoice = existingChoices.find(
+          (item) => item.choices_id === choice.choices_id
+        );
+
+        if (existingChoice) {
+          await Choices.update(validatedChoice, {
+            where: { choices_id: validatedChoice.choices_id },
+            transaction: t,
+          });
+        } else {
+          await Choices.create(
+            { ...validatedChoice, question_id },
+            { transaction: t }
+          );
+        }
+      }
+      const updatedQuestion = await Question.findByPk(question_id, {
+        transaction: t,
+      });
+
+      return res.status(201).json({
+        status: "Success",
+        message: "Successfully updated",
+        data: updatedQuestion,
+      });
     });
-    res.status(200).json({ message: "Question updated successfully" });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -121,6 +186,6 @@ module.exports = {
   getAllQuestions,
   getAllQuestionById,
   insertQuestionChoices,
-  updateQuestion,
+  updateQuestionChoices,
   deleteQuestion,
 };
