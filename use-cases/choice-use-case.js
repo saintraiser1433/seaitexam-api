@@ -5,6 +5,7 @@ const choiceUseCase = {
   insert: async (data) => {
     const { error, value } = choicesValidation.choiceValidate(data);
     if (error) throw new Error(error.details[0].message);
+
     return value;
   },
 

@@ -50,6 +50,7 @@ const getChoicesByQuestionId = async (req, res) => {
       include: [
         {
           model: model.Choices,
+          as: "choices",
           attributes: ["choices_id", "description", "status"],
         },
       ],
@@ -78,7 +79,8 @@ const getChoicesByExamId = async (req, res) => {
         include: [
           {
             model: model.Choices,
-            attributes: ["choices_id", "description", "status"],
+            as: "choices",
+            attributes: ["choices_id", "question_id", "description", "status"],
           },
         ],
       },
@@ -117,7 +119,7 @@ const updateChoice = async (req, res) => {
 };
 
 const deleteChoice = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.choicesId;
   try {
     const deleteRowCount = await model.Choices.destroy({
       where: {

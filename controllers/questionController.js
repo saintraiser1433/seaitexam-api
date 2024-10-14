@@ -16,7 +16,7 @@ const getAllQuestions = async (req, res) => {
     }
     res.status(200).json({ data: result });
   } catch (e) {
-    return res.status(500).json({ message: e.message });
+    return res.status(500).json({ error: e.message });
   }
 };
 
@@ -36,7 +36,7 @@ const getAllQuestionById = async (req, res) => {
     }
     res.status(200).json({ data: result });
   } catch (e) {
-    return res.status(500).json({ message: e.message });
+    return res.status(500).json({ error: e.message });
   }
 };
 
@@ -61,21 +61,25 @@ const insertQuestionChoices = async (req, res) => {
       }));
 
       const validatedChoices = await choiceUseCase.insert(choiceData);
-
-      const choiceRecord = await Choices.bulkCreate(validatedChoices, {
+      const createdChoices = await Choices.bulkCreate(validatedChoices, {
         transaction: t,
       });
+
+      const result = {
+        question_id: questionRecord.question_id,
+        question: questionRecord.question,
+        exam_id: questionRecord.exam_id,
+        choices: createdChoices,
+      };
+
       return res.status(201).json({
         status: "Success",
         message: "Succesfully inserted",
-        data: {
-          question: questionRecord,
-          choices: choiceRecord,
-        },
+        data: result,
       });
     });
   } catch (e) {
-    return res.status(500).json({ message: e.message });
+    return res.status(500).json({ error: e.message });
   }
 };
 
@@ -90,7 +94,7 @@ const updateQuestion = async (req, res) => {
     });
     res.status(200).json({ message: "Question updated successfully" });
   } catch (e) {
-    return res.status(500).json({ message: e.message });
+    return res.status(500).json({ error: e.message });
   }
 };
 
@@ -109,7 +113,7 @@ const deleteQuestion = async (req, res) => {
     }
     res.status(200).json({ message: "Question deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 

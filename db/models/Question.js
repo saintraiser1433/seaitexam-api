@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
       Question.hasMany(models.Choices, {
+        as: "choices",
         foreignKey: {
           name: "question_id",
           allowNull: false,

@@ -5,7 +5,6 @@ const questionUseCase = {
   insert: async (data) => {
     const { error, value } = questionValidation.checkValidate(data);
     const { exam_id } = value;
-
     if (error) throw new Error(error.details[0].message);
 
     const exam = await model.Exam.findByPk(parseInt(exam_id));

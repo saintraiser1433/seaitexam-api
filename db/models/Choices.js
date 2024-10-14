@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
           name: "question_id",
           allowNull: false,
         },
+        onDelete: "CASCADE",
       });
     }
   }
