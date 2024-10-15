@@ -3,7 +3,9 @@ const { courseValidation } = require("../util/validation");
 
 const getAllCourse = async (req, res) => {
   try {
-    const result = await models.Course.findAll();
+    const result = await models.Course.findAll({
+      attributes: ["course_id", "description", "score"],
+    });
     if (result.length === 0) {
       return res.status(404).json({
         error: "No result found",
@@ -39,10 +41,11 @@ const insertCourse = async (req, res) => {
     const { error, value } = courseValidation.insert(req.body);
     if (error) {
       return res.status(400).json({
-        message: error.details[0].message,
+        error: error.details[0].message,
       });
     }
-    const [examinee, created] = await models.Course.findOrCreate({
+    const [course, created] = await models.Course.findOrCreate({
+      attributes: ["course_id", "description", "score"],
       where: {
         description: value.description,
       },
@@ -53,7 +56,7 @@ const insertCourse = async (req, res) => {
     if (created) {
       return res.status(201).json({
         message: "Successfully registered course",
-        data: examinee,
+        course,
       });
     }
     res.status(409).json({
@@ -85,7 +88,7 @@ const updateCourse = async (req, res) => {
         error: "Course not found or no changes made",
       });
     }
-    return res.status(200).json({
+    res.status(200).json({
       message: "Course updated successfully",
     });
   } catch (error) {

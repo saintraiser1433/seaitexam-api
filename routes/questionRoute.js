@@ -1,17 +1,15 @@
 const { Router } = require("express");
 const {
-  getAllQuestions,
-  getAllQuestionById,
+  getQuestionChoicesByExamId,
   insertQuestionChoices,
   updateQuestionChoices,
-  deleteQuestion,
+  deleteQuestionChoices,
 } = require("../controllers/questionController");
 const route = Router();
 
-route.get("/", getAllQuestions);
-route.get("/:id", getAllQuestionById);
+route.get("/:id", getQuestionChoicesByExamId);
 route.post("/", insertQuestionChoices);
 route.put("/:id", updateQuestionChoices);
-route.delete("/:id", deleteQuestion);
+route.delete("/:id", deleteQuestionChoices);
 
 module.exports = route;

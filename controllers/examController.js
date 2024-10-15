@@ -3,6 +3,14 @@ const { examValidation } = require("../util/validation");
 const getExamAll = async (req, res) => {
   try {
     const result = await model.Exam.findAll({
+      attributes: [
+        "exam_id",
+        "description",
+        "exam_title",
+        "question_limit",
+        // "status",
+        "time_limit",
+      ],
       order: [["exam_id", "asc"]],
     });
     if (result.length === 0) {
@@ -10,10 +18,10 @@ const getExamAll = async (req, res) => {
         error: "No exam found",
       });
     }
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -24,7 +32,7 @@ const getExamAllById = async (req, res) => {
     const result = await model.Exam.findByPk(id);
     if (!result) {
       return res.status(404).json({
-        message: "No exam found",
+        error: "No exam found",
       });
     }
     res.status(200).json(result);
@@ -40,11 +48,11 @@ const insertExam = async (req, res) => {
     const { error, value } = examValidation.insert(req.body);
     if (error) {
       return res.status(404).json({
-        message: error.details[0].message,
+        error: error.details[0].message,
       });
     }
 
-    const [data, created] = await model.Exam.findOrCreate({
+    const [exam, created] = await model.Exam.findOrCreate({
       where: {
         exam_title: value.exam_title,
       },
@@ -57,11 +65,11 @@ const insertExam = async (req, res) => {
     if (created) {
       return res.status(201).json({
         message: "Successfully inserted exam",
-        data,
+        exam,
       });
     }
     res.status(409).json({
-      message: "Exam Title already exists",
+      error: "Exam Title already exists",
     });
   } catch (error) {
     return res.status(500).json({
@@ -76,7 +84,7 @@ const updateExam = async (req, res) => {
     const { error, value } = examValidation.update(req.body);
     if (error) {
       return res.status(404).json({
-        message: error.details[0].message,
+        error: error.details[0].message,
       });
     }
     const [updatedRowsCount] = await model.Exam.update(value, {
@@ -85,7 +93,7 @@ const updateExam = async (req, res) => {
 
     if (updatedRowsCount === 0) {
       return res.status(404).json({
-        message: "Exam not found no changes made",
+        error: "Exam not found no changes made",
       });
     }
     return res.status(200).json({
@@ -108,7 +116,7 @@ const deleteExam = async (req, res) => {
     });
     if (isDelete === 0) {
       return res.status(404).json({
-        message: "Exam is not found no deletion has been made",
+        error: "Exam is not found no deletion has been made",
       });
     }
     return res.status(200).json({

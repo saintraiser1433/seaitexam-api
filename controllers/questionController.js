@@ -1,40 +1,35 @@
 const { sequelize, Question, Choices, Exam } = require("../db/models");
 const questionUseCase = require("../use-cases/question-use-case");
 const choiceUseCase = require("../use-cases/choice-use-case");
-const getAllQuestions = async (req, res) => {
-  try {
-    const result = await Question.findAll({
-      include: [
-        {
-          model: Exam,
-          attributes: ["exam_title"],
-        },
-      ],
-    });
-    if (result.length === 0) {
-      return res.status(404).json({ message: "No questions found" });
-    }
-    res.status(200).json({ data: result });
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
-  }
-};
 
-const getAllQuestionById = async (req, res) => {
+const getQuestionChoicesByExamId = async (req, res) => {
   const id = req.params.id;
   try {
-    const result = await Question.findByPk(id, {
-      include: [
-        {
-          model: Exam,
-          attributes: ["exam_title"],
-        },
-      ],
-    });
-    if (!result) {
-      return res.status(404).json({ message: "Question not found" });
+    const checkValidate = await Exam.findByPk(id);
+    if (!checkValidate) {
+      return res.status(404).json({ error: "Exam Not Found" });
     }
-    res.status(200).json({ data: result });
+
+    const result = await Question.findAll(
+      {
+        attributes: ["question_id", "question", "exam_id"],
+        include: [
+          {
+            model: Choices,
+            as: "choices",
+            attributes: ["choices_id", "question_id", "description", "status"],
+          },
+        ],
+      },
+      {
+        where: {
+          exam_id: id,
+        },
+        order: [["choices_id", "asc"]],
+      }
+    );
+    if (!result) throw new Error("No result found");
+    return res.status(200).json(result);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -69,15 +64,22 @@ const insertQuestionChoices = async (req, res) => {
       const insertedQuestion = await Question.findByPk(
         questionRecord.question_id,
         {
+          attributes: ["question_id", "question", "exam_id"],
+          include: [
+            {
+              model: Choices,
+              as: "choices",
+              attributes: [
+                "choices_id",
+                "question_id",
+                "description",
+                "status",
+              ],
+            },
+          ],
           transaction: t,
         }
       );
-      // const result = {
-      //   question_id: questionRecord.question_id,
-      //   question: questionRecord.question,
-      //   exam_id: questionRecord.exam_id,
-      //   choices: createdChoices,
-      // };
 
       return res.status(201).json({
         status: "Success",
@@ -95,7 +97,6 @@ const updateQuestionChoices = async (req, res) => {
     await sequelize.transaction(async (t) => {
       const { question, question_id, choices } = req.body;
 
-      // Update the question
       const quest = {
         question: question,
         question_id: question_id,
@@ -107,16 +108,13 @@ const updateQuestionChoices = async (req, res) => {
         transaction: t,
       });
 
-      // Find all existing choices for the question
       const existingChoices = await Choices.findAll({
         where: { question_id: question_id },
         transaction: t,
       });
 
-      // Get the ids of incoming choices from the request body
       const incomingChoiceIds = choices.map((choice) => choice.choices_id);
 
-      // Delete the choices that do not exist in the incoming choices
       const choicesToDelete = existingChoices.filter(
         (existingChoice) =>
           !incomingChoiceIds.includes(existingChoice.choices_id)
@@ -163,7 +161,7 @@ const updateQuestionChoices = async (req, res) => {
   }
 };
 
-const deleteQuestion = async (req, res) => {
+const deleteQuestionChoices = async (req, res) => {
   const id = req.params.id;
   try {
     const deleteRowCount = await Question.destroy({
@@ -183,9 +181,8 @@ const deleteQuestion = async (req, res) => {
 };
 
 module.exports = {
-  getAllQuestions,
-  getAllQuestionById,
+  getQuestionChoicesByExamId,
   insertQuestionChoices,
   updateQuestionChoices,
-  deleteQuestion,
+  deleteQuestionChoices,
 };

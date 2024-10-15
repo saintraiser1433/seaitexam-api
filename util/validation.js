@@ -27,6 +27,7 @@ const examineeValidation = {
 
   update: (data) => {
     const schema = Joi.object({
+      examinee_id: Joi.number().optional(),
       first_name: Joi.string().min(3).max(30).empty().optional(),
       last_name: Joi.string().min(3).max(30).empty().optional(),
       middle_name: Joi.string().min(3).max(30).empty().optional(),
@@ -41,8 +42,8 @@ const courseValidation = {
   insert: (data) => {
     const schema = Joi.object({
       description: Joi.string().required().messages({
-        "string.empty": `Description cannot be empty`,
-        "any.required": `Description cannot be null or empty`,
+        "string.empty": `Course cannot be empty`,
+        "any.required": `Course cannot be null or empty`,
       }),
       score: Joi.number().min(1).required().messages({
         "string.base": `Score should be a type of 'number'`,
@@ -54,14 +55,13 @@ const courseValidation = {
   },
   update: (data) => {
     const schema = Joi.object({
+      course_id: Joi.number().optional(),
       description: Joi.string().empty().optional().messages({
         "string.empty": `Description cannot be empty`,
-        "any.required": `Description cannot be null or empty`,
       }),
-      score: Joi.number().min(1).optional().messages({
+      score: Joi.number().empty().optional().messages({
         "string.base": `Score should be a type of 'number'`,
         "string.empty": `Score cannot be empty`,
-        "any.required": `Score cannot be null or empty`,
       }),
     });
     return schema.validate(data);
@@ -121,23 +121,17 @@ const examValidation = {
       exam_title: Joi.string().min(1).empty().optional().messages({
         "string.min": `Exam Title should have a minimum length of {#limit}`,
         "string.empty": `Exam Title cannot be empty`,
-        "any.required": `Exam Title cannot be null or empty`,
       }),
       description: Joi.string().min(1).empty().optional().messages({
-        "string.min": `Exam description should have a minimum length of {#limit}`,
-        "string.empty": `Exam description cannot be empty`,
-        "any.required": `Exam description  cannot be null or empty`,
+        "string.min": `Exam description cannot be empty`,
       }),
       time_limit: Joi.number().min(1).empty().optional().messages({
-        "number.min": `Time limit should have a minimum length of {#limit}`,
-        "string.empty": `Time Limit cannot be empty`,
-        "any.required": `Time Limit cannot be null or empty`,
+        "number.min": `Time Limit cannot be empty`,
       }),
       question_limit: Joi.number().min(1).empty().optional().messages({
-        "number.min": `Question Limit should have a minimum length of {#limit}`,
-        "string.empty": `Question Limit cannot be empty`,
-        "any.required": `Question Limit cannot be null or empty`,
+        "number.min": `Question Limit cannot be empty`,
       }),
+      exam_id: Joi.number().min(1).empty().optional(),
     });
     return schema.validate(data);
   },
@@ -145,17 +139,22 @@ const examValidation = {
 
 const choicesValidation = {
   insert: (data) => {
-    const schema = Joi.array().items({
-      description: Joi.string().required().messages({
-        "string.empty": `Choice cannot be empty`,
-        "any.required": `Choice cannot be null or empty`,
-      }),
-      question_id: Joi.number().required().messages({
-        "number.empty": `Question cannot be empty`,
-        "any.required": `Question cannot be null or empty`,
-      }),
-      status: Joi.boolean().optional(),
-    });
+    const schema = Joi.array()
+      .items({
+        description: Joi.string().required().messages({
+          "string.empty": `Choice cannot be empty`,
+          "any.required": `Choice cannot be null or empty`,
+        }),
+        question_id: Joi.number().required().messages({
+          "number.empty": `Question cannot be empty`,
+          "any.required": `Question cannot be null or empty`,
+        }),
+        status: Joi.boolean().optional(),
+      })
+      .min(1)
+      .messages({
+        "array.min": "At least one choice is required",
+      });
     return schema.validate(data);
   },
   update: (data) => {
@@ -166,7 +165,11 @@ const choicesValidation = {
       }),
       choices_id: Joi.number().optional(),
       status: Joi.boolean().optional(),
-    });
+    })
+      .min(1)
+      .messages({
+        "array.min": "At least one choice is required",
+      });
     return schema.validate(data);
   },
 };

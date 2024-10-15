@@ -7,7 +7,6 @@ const {
   courseRoute,
   questionRoute,
   examRoute,
-  choicesRoute,
   answerRoute,
 } = require("./routes/index");
 
@@ -20,7 +19,6 @@ app.use("/api/v1/examinee", examineeRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/exam", examRoute);
 app.use("/api/v1/question", questionRoute);
-app.use("/api/v1/choices", choicesRoute);
 app.use("/api/v1/answer", answerRoute);
 
 app.use("*", (req, res) => {

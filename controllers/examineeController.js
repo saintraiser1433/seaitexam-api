@@ -42,7 +42,7 @@ const insertExaminee = async (req, res) => {
     const { error, value } = examineeValidation.insert(req.body);
     if (error) {
       return res.status(400).json({
-        message: error.details[0].message,
+        error: error.details[0].message,
       });
     }
     const { first_name, last_name, middle_name, username, password } = value;
@@ -63,11 +63,11 @@ const insertExaminee = async (req, res) => {
     if (created) {
       return res.status(201).json({
         message: "Successfully added examinee",
-        data: examinee,
+        examinee,
       });
     }
     res.status(409).json({
-      message: "Examinee already exists",
+      error: "Examinee already exists",
     });
   } catch (error) {
     res.status(500).json({

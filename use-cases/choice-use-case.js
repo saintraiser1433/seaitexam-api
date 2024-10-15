@@ -1,6 +1,4 @@
 const { choicesValidation } = require("../util/validation");
-const model = require("../db/models");
-
 const choiceUseCase = {
   insert: async (data) => {
     const { error, value } = choicesValidation.insert(data);
