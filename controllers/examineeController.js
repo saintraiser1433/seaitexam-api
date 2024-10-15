@@ -5,11 +5,7 @@ const { hashPassword } = require("../util/hash");
 const getAllExaminee = async (req, res) => {
   try {
     const result = await models.Examinee.findAll();
-    if (result.length === 0) {
-      return res.status(404).json({
-        message: "No result found",
-      });
-    }
+
     res.status(200).send(result);
   } catch (error) {
     res.status(500).json({

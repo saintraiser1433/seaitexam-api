@@ -10,24 +10,20 @@ const getQuestionChoicesByExamId = async (req, res) => {
       return res.status(404).json({ error: "Exam Not Found" });
     }
 
-    const result = await Question.findAll(
-      {
-        attributes: ["question_id", "question", "exam_id"],
-        include: [
-          {
-            model: Choices,
-            as: "choices",
-            attributes: ["choices_id", "question_id", "description", "status"],
-          },
-        ],
+    const result = await Question.findAll({
+      attributes: ["question_id", "question", "exam_id"],
+      where: {
+        exam_id: id,
       },
-      {
-        where: {
-          exam_id: id,
+      include: [
+        {
+          model: Choices,
+          as: "choices",
+          attributes: ["choices_id", "question_id", "description", "status"],
         },
-        order: [["choices_id", "asc"]],
-      }
-    );
+      ],
+      order: [["question_id", "asc"]],
+    });
     if (!result) throw new Error("No result found");
     return res.status(200).json(result);
   } catch (e) {

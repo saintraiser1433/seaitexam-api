@@ -13,11 +13,7 @@ const getExamAll = async (req, res) => {
       ],
       order: [["exam_id", "asc"]],
     });
-    if (result.length === 0) {
-      return res.status(404).json({
-        error: "No exam found",
-      });
-    }
+
     res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({

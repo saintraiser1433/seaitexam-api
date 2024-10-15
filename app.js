@@ -8,6 +8,7 @@ const {
   questionRoute,
   examRoute,
   answerRoute,
+  departmentRoute,
 } = require("./routes/index");
 
 const app = express();
@@ -20,7 +21,7 @@ app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/exam", examRoute);
 app.use("/api/v1/question", questionRoute);
 app.use("/api/v1/answer", answerRoute);
-
+app.use("/api/v1/department", departmentRoute);
 app.use("*", (req, res) => {
   return res.status(404).json({
     message: "Route not found",

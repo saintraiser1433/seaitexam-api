@@ -6,11 +6,7 @@ const getAllCourse = async (req, res) => {
     const result = await models.Course.findAll({
       attributes: ["course_id", "description", "score"],
     });
-    if (result.length === 0) {
-      return res.status(404).json({
-        error: "No result found",
-      });
-    }
+
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({

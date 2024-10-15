@@ -194,6 +194,22 @@ const answerValidation = {
   },
 };
 
+const departmentValidation = {
+  validate: (data) => {
+    const schema = Joi.object({
+      department_id: Joi.number().optional().messages({
+        "any.required": `Department ID is null or empty`,
+      }),
+      department: Joi.string().required().messages({
+        "string.empty": `Department Name cannot be empty`,
+        "any.required": `Department Name cannot be null or empty`,
+      }),
+      status: Joi.boolean().optional(),
+    });
+    return schema.validate(data);
+  },
+};
+
 module.exports = {
   examineeValidation,
   courseValidation,
@@ -201,4 +217,5 @@ module.exports = {
   examValidation,
   choicesValidation,
   answerValidation,
+  departmentValidation,
 };
