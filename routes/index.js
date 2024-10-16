@@ -4,6 +4,7 @@ const questionRoute = require("./questionRoute");
 const examRoute = require("./examRoute");
 const answerRoute = require("./answerRoute");
 const departmentRoute = require("./departmentRoute");
+const deansRoute = require("./deansRoute");
 module.exports = {
   examineeRoute,
   courseRoute,
@@ -11,4 +12,5 @@ module.exports = {
   examRoute,
   answerRoute,
   departmentRoute,
+  deansRoute,
 };

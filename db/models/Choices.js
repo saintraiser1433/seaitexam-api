@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Choices.belongsTo(models.Question, {
+        as: "choices",
         foreignKey: {
           name: "question_id",
           allowNull: false,

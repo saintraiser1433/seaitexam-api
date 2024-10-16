@@ -13,16 +13,15 @@ const getAllDepartment = async (req, res) => {
 
 const insertDepartment = async (req, res) => {
   try {
-    console.log(req.body);
     const { error, value } = departmentValidation.validate(req.body);
     if (error) {
       return res.status(400).json({
-        message: error.details.message,
+        error: error.details[0].message,
       });
     }
-    console.log(value);
+
     const [department, created] = await model.Department.findOrCreate({
-      where: { department_name: value.department },
+      where: { department_name: value.department_name },
       defaults: {
         status: value.status,
       },
@@ -49,7 +48,7 @@ const updateDepartment = async (req, res) => {
     const { error, value } = departmentValidation.validate(req.body);
     if (error) {
       return res.status(400).json({
-        message: error.details.message,
+        error: error.details[0].message,
       });
     }
 
@@ -59,6 +58,7 @@ const updateDepartment = async (req, res) => {
         error: "Department not found",
       });
     }
+
     const [updatedRowsCount] = await model.Department.update(value, {
       where: { department_id: id },
     });
