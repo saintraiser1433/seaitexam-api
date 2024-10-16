@@ -269,6 +269,22 @@ const deansValidation = {
   },
 };
 
+const assignDeansCourseValidation = {
+  validate: (data) => {
+    const schema = Joi.object({
+      deans_id: Joi.number().required().messages({
+        "number.empty": `Dean ID cannot be empty`,
+        "any.required": `Dean ID cannot be null or empty`,
+      }),
+      course_id: Joi.number().required().messages({
+        "number.empty": `Department Name cannot be empty`,
+        "any.required": `Department Name cannot be null or empty`,
+      }),
+    });
+    return schema.validate(data);
+  },
+};
+
 module.exports = {
   examineeValidation,
   courseValidation,
@@ -278,4 +294,5 @@ module.exports = {
   answerValidation,
   departmentValidation,
   deansValidation,
+  assignDeansCourseValidation,
 };

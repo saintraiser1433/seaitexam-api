@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       AssignDeansCourse.belongsTo(models.Course, {
+        as: "course",
         foreignKey: "course_id",
         allowNull: false,
       });
